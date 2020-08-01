@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:autoSizeTextType="uniform"
         android:fontFamily="@font/bungee"
-        android:text="MAIN ACTIVITY"
+        android:text="MAIN ACTIVITY111"
         android:textColor="#000"
         android:textSize="30sp"
         android:transitionName="logo_text" />
