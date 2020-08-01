@@ -3,6 +3,9 @@ package co.sih.presso;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -15,22 +18,33 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     Button btngoBack, btnconfirmLogout;
+    boolean flag = true;
+    FloatingActionButton startSpeech;
+    ArrayList<String> resultSpeech = null;
+
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+    SpeechRecognizer speechRecognizer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        startSpeech = findViewById(R.id.startSpeechbtn);
 
         Toast.makeText(this, "Welcome  " + firebaseUser.getEmail(), Toast.LENGTH_SHORT).show();
 
@@ -48,6 +62,46 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView.setItemIconTintList(null);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        startSpeech.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Toast.makeText(MainActivity.this, "Button CLicked", Toast.LENGTH_SHORT).show();
+
+                speechRecognizer = speechRecognizer.createSpeechRecognizer(getApplicationContext());
+                Intent intent;
+                intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-IN");
+                intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 10);
+//                if ((flag = true))
+//                    speechRecognizer.startListening(intent);
+                startActivityForResult(intent, 5);
+
+
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 5) {
+            if (resultCode == RESULT_OK && data != null) {
+                resultSpeech = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                String str = resultSpeech.get(0);
+                for (int i = 0; i < 10; i++)
+                    Log.e("Result Speech array", resultSpeech.get(i));
+//                Intent intent = new Intent(getApplicationContext(), MainActivityKotlin.class);
+                Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+//                intent.putExtra("message", str);
+
+//                startActivity(intent);
+            }
+        }
     }
 
 
