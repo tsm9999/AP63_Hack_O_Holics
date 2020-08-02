@@ -1,0 +1,13 @@
+export const LANDING = '/';
+export const SIGN_UP = '/signup';
+export const SIGN_IN = '/signin';
+export const HOME = '/home';
+export const SPEECH = '/speech';
+export const PRESCRIPTION = '/pdf';
+export const SCHEDULING = '/scheduling';
+export const ASSISTANT = '/assistant';
+export const ACCOUNT = '/account';
+export const ADMIN = '/admin';
+export const PASSWORD_FORGET = '/pw-forget';
+export const PATIENT_REG = '/patientreg';
+export const MAIN = 'main';
