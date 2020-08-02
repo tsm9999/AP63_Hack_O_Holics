@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { withFirebase } from '../Firebase';
-import { PDFDownloadLink, Text, Document, Page } from '@react-pdf/renderer'
-import ReactPDF from '@react-pdf/renderer';
 import './index.css';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas'
-
+import Dropdown from 'react-dropdown';
+import 'react-dropdown/style.css';
+import Container from 'react-bootstrap/Container'
+import Col from 'react-bootstrap/Col'
+import Row from 'react-bootstrap/Row'
 const pdf = () => (
 
   <div id="pdfform">
@@ -37,14 +39,26 @@ class pdfBase extends Component {
   constructor(props) {
     super(props);   
   console.log(this.props.location.state);
-	this.state = { username: this.props.location.state.PatientName,
+	this.state = { 
+  key: this.props.location.state.Key,
+  username: this.props.location.state.PatientName,
   age: this.props.location.state.Age,
   symptoms: this.props.location.state.Symptoms,
   diagnosis: this.props.location.state.Diagnosis,
   prescription: this.props.location.state.Medicines,
+  dose: this.props.location.state.Dose,
   suggestions: this.props.location.state.Recommendations,
   advice: this.props.location.state.Advice,
-  error: null, };
+  error: null, 
+    
+  options:[
+    'one', 'two', 'three'
+  ],
+ //defaultOption: this.state.options[0],
+  };
+
+  console.log('presc', this.state.prescription);
+
   let db = this.props.firebase.db;
   this.props.firebase.auth.onAuthStateChanged(function(user) {
     if (user) {
@@ -68,9 +82,8 @@ class pdfBase extends Component {
       console.log("Got an error: ",error);
       });
     } 
-
-  
 });
+
   
   }
 
@@ -118,6 +131,27 @@ class pdfBase extends Component {
         pdf.save(this.props.location.state.PatientName +"_prescription.pdf");
       })
     ;
+
+    //update patient history
+    const db = this.props.firebase.db;
+        db.settings({
+          timestampsInSnapshots: true
+        });
+
+        console.log('history', this.state.key);
+
+        const userRef = db.collection("Patient_Details")
+          .doc(this.state.key)
+          .collection("History")
+          .doc().set({
+          date:  "20/7/2020",
+          diagnosis: document.getElementById('p_dia').innerHTML,
+          symptoms: document.getElementById('p_sym').innerHTML,
+          advice: document.getElementById('p_advice').innerHTML,
+          prescription: document.getElementById('p_pre').innerHTML,          
+        });  
+
+
     document.getElementById('p_advice').innerHTML = "";
     document.getElementById('p_pre').innerHTML = "";
     document.getElementById('p_dia').innerHTML = "";
@@ -131,19 +165,7 @@ class pdfBase extends Component {
     document.getElementById("dia_txt").style.display = "block";
     document.getElementById("sym_txt").style.display ="block";
     
-      //update patient history
-    const db = this.props.firebase.db;
-        db.settings({
-          timestampsInSnapshots: true
-        });
-        const userRef = db.collection("Patient_Details").doc(this.props.firebase.auth.currentUser.uid)
-          .collection("History").doc().set({
-          suggestions:  document.getElementById('sugg_text').value,
-          diagnosis: document.getElementById('p_dia').innerHTML,
-          symptoms: document.getElementById('p_sym').innerHTML,
-          advice: document.getElementById('p_advice').innerHTML,
-          prescription: document.getElementById('p_pre').innerHTML,          
-        });  
+      
 
   }
   
@@ -158,9 +180,12 @@ class pdfBase extends Component {
       symptoms,
       diagnosis,
       prescription,
+      dose,
       suggestions,
       advice,
       error,
+      options,
+     // defaultOption,
      } = this.state;
 
          
@@ -220,7 +245,7 @@ class pdfBase extends Component {
           placeholder="Contact number"
         /></div>
         </div>
-        <hr />
+        <hr/>
        
         <div className="form-group ">
                     <label>Symptoms</label>
@@ -253,6 +278,30 @@ class pdfBase extends Component {
           placeholder="prescription"
         /></div>
         <p id="p_pre" ></p>
+        { this.state.prescription.length>0 &&this.state.prescription.map((medicine, index) => {
+
+                return(<div id="dd" className="dropdown">
+                  <Container fluid>
+                  <Row  >
+            <Col sm={6}>
+                  <Dropdown 
+                    options={medicine} 
+                    value={medicine[0]}                    
+                  /> 
+            </Col>
+            <Col sm={6} >
+                <input
+                  name="age" className="form-control"
+                  value={dose[index]}
+                  onChange={this.onChange}
+                  type="text"
+                  placeholder="dose"
+                />
+            </Col>
+            </Row>
+            </Container>
+                </div>);
+              })}
         <div className="form-group ">
                     <label id='label_sugg'>suggestions</label>
         <textarea
