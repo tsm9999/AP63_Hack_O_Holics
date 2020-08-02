@@ -1,0 +1,35 @@
+body{
+    margin-top: 100px;
+    align-content: center; 
+    margin-bottom: 50px;
+}
+#pdfform{
+    margin: auto; 
+    background: white;
+    position: absolute;
+    width: 800px;
+    height: 1150px;
+    box-sizing: border-box;
+    padding: 70px 30px;
+    border-radius: 2%;
+    right: 0;
+    left: 0; 
+}
+#pdfform h1{
+    text-align: center;
+}
+#pdfform button:hover
+{
+    cursor: pointer;
+    background: #429aec;
+    color: #fff;
+}
+
+#pdfform textarea{    
+overflow: linebreak;
+margin-top: 0;
+}
+
+.myrow{
+    margin-right: 30px;
+}
