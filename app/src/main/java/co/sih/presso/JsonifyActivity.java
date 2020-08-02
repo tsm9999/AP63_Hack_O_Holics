@@ -54,7 +54,7 @@ public class JsonifyActivity extends AppCompatActivity {
             "}";
     TextView inputStringtv;
     TextView jsonConverttv;
-    Button convertToJson;
+    Button convertToJson, generatePrescriptionbtn;
     private String url = "http://" + "192.168.1.209" + ":" + 5005 + "/";
     private String postBodyString;
     private MediaType mediaType;
@@ -68,6 +68,7 @@ public class JsonifyActivity extends AppCompatActivity {
         convertToJson = findViewById(R.id.btnConvertToJson);
         inputStringtv = findViewById(R.id.inputStringtv);
         jsonConverttv = findViewById(R.id.outputJsontv);
+        generatePrescriptionbtn = findViewById(R.id.btngeneratePrescription);
 
 
         Intent in = getIntent();
@@ -83,6 +84,13 @@ public class JsonifyActivity extends AppCompatActivity {
             }
         });
 //        jsonConverttv.setText(test);
+
+        generatePrescriptionbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(JsonifyActivity.this, PrescriptionActivity.class));
+            }
+        });
 
     }
 
