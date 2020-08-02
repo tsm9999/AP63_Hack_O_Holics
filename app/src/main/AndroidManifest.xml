@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".JsonifyActivity"></activity>
+        <activity android:name=".PrescriptionActivity"></activity>
+        <activity android:name=".JsonifyActivity" />
         <activity android:name=".HelpUs" />
         <activity android:name=".DoctorProfile" />
         <activity android:name=".OTPVerification" />
