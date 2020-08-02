@@ -1,0 +1,28 @@
+body{ 
+    margin-top: 100px;
+}
+
+#psignupform{
+    margin: auto;
+    background: white;
+    width: 600px;
+    height: 600px;
+    left: 0;
+    right: 0;
+    box-sizing: border-box;
+    padding: 70px 30px;
+    border-radius: 2%;
+
+}
+#psignupform h1{
+    text-align: center;
+}
+#psignupform button:hover
+{
+    cursor: pointer;
+    background: #429aec;
+    color: #fff;
+}
+#psignupform p{
+    text-align: center;
+}
