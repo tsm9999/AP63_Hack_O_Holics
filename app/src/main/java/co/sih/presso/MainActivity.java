@@ -36,6 +36,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+    Boolean speechResultsFound = false;
+    SpeechRecognizer userSpeech;
+
 
     SpeechRecognizer speechRecognizer;
 
@@ -76,13 +79,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-IN");
                 intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 10);
+                intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, new Long(500000));
 //                if ((flag = true))
 //                    speechRecognizer.startListening(intent);
                 startActivityForResult(intent, 5);
-
-
             }
         });
+
     }
 
     @Override
@@ -92,14 +95,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (requestCode == 5) {
             if (resultCode == RESULT_OK && data != null) {
                 resultSpeech = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                String str = resultSpeech.get(0);
-                for (int i = 0; i < 10; i++)
-                    Log.e("Result Speech array", resultSpeech.get(i));
-//                Intent intent = new Intent(getApplicationContext(), MainActivityKotlin.class);
-                Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
-//                intent.putExtra("message", str);
-
-//                startActivity(intent);
+                String inputSTTString = resultSpeech.get(0);
+                Log.e("Result Speech array", resultSpeech.get(0));
+                Intent intent = new Intent(getApplicationContext(), JsonifyActivity.class);
+                Toast.makeText(this, inputSTTString, Toast.LENGTH_SHORT).show();
+                intent.putExtra("inputSTTString", inputSTTString);
+                startActivity(intent);
             }
         }
     }
