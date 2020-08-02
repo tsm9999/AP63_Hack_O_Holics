@@ -3,12 +3,11 @@ package co.sih.presso;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +18,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 
 public class PrescriptionActivity extends AppCompatActivity {
@@ -26,6 +27,7 @@ public class PrescriptionActivity extends AppCompatActivity {
     Button openBottomSheet;
     private BottomSheetBehavior sheetBehavior;
     private LinearLayout bottom_sheet;
+    HashMap<String, List> sim_med = new HashMap<>();
 
 
     String TAG = "PrescriptionActivity";
@@ -34,6 +36,7 @@ public class PrescriptionActivity extends AppCompatActivity {
     RecyclerView rv_med, rv_sym;
     ArrayList<String> Medicines = new ArrayList<>();
     ArrayList<String> Symptoms = new ArrayList<>();
+    TextView t1, t2, t3, t4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +45,10 @@ public class PrescriptionActivity extends AppCompatActivity {
 
         bottom_sheet = findViewById(R.id.bottom_sheet);
         sheetBehavior = BottomSheetBehavior.from(bottom_sheet);
-        openBottomSheet = findViewById(R.id.getBottomSheet);
-
-
+        t1 = findViewById(R.id.recommendation_1);
+        t2 = findViewById(R.id.recommendation_2);
+        t3 = findViewById(R.id.recommendation_3);
+        t4 = findViewById(R.id.recommendation_4);
         sheetBehavior.setPeekHeight(0);
 
 
@@ -61,40 +65,42 @@ public class PrescriptionActivity extends AppCompatActivity {
 //                    }
 //                }
 //            });
-
-        // callback for do something
-        sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View view, int newState) {
-                switch (newState) {
-                    case BottomSheetBehavior.STATE_HIDDEN:
-                        break;
-                    case BottomSheetBehavior.STATE_EXPANDED: {
-                        openBottomSheet.setText("Close Sheet");
-                    }
-                    break;
-                    case BottomSheetBehavior.STATE_COLLAPSED: {
-                        openBottomSheet.setText("Expand Sheet");
-                        sheetBehavior.setPeekHeight(0);
-
-                    }
-                    break;
-                    case BottomSheetBehavior.STATE_DRAGGING:
-                        break;
-                    case BottomSheetBehavior.STATE_SETTLING:
-                        break;
-                }
-            }
-
-            @Override
-            public void onSlide(@NonNull View view, float v) {
-
-            }
-        });
+//
+//        // callback for do something
+//        sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+//            @Override
+//            public void onStateChanged(@NonNull View view, int newState) {
+//                switch (newState) {
+//                    case BottomSheetBehavior.STATE_HIDDEN:
+//                        break;
+//                    case BottomSheetBehavior.STATE_EXPANDED: {
+//                        openBottomSheet.setText("Close Sheet");
+//                    }
+//                    break;
+//                    case BottomSheetBehavior.STATE_COLLAPSED: {
+//                        openBottomSheet.setText("Expand Sheet");
+//                        sheetBehavior.setPeekHeight(0);
+//
+//                    }
+//                    break;
+//                    case BottomSheetBehavior.STATE_DRAGGING:
+//                        break;
+//                    case BottomSheetBehavior.STATE_SETTLING:
+//                        break;
+//                }
+//            }
+//
+//            @Override
+//            public void onSlide(@NonNull View view, float v) {
+//
+//            }
+//        });
 
 
         Intent in = getIntent();
         jsonString = in.getStringExtra("jsonString");
+
+        convert2json(jsonString);
 
 
         try {
@@ -120,11 +126,7 @@ public class PrescriptionActivity extends AppCompatActivity {
 
                 LinearLayoutManager(this));
 
-        Medicines = new ArrayList<>();
-        Medicines.add("med1");
-        Medicines.add("med2");
-        Medicines.add("med3");
-        Medicines.add("med4");
+
         final ArrayList<String> medList = new ArrayList<>();
         Log.e("length", String.valueOf(Medicines.size()));
         for (
@@ -147,6 +149,22 @@ public class PrescriptionActivity extends AppCompatActivity {
                 //clicked(temp);
                 Toast.makeText(getApplicationContext(), temp, Toast.LENGTH_SHORT).show();
                 adapter.notifyItemChanged(position);
+
+                if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+//                        openBottomSheet.setText("Close sheet");
+
+                    ArrayList<String> r = new ArrayList<>(sim_med.get(temp));
+                    t1.setText(r.get(0));
+                    t2.setText(r.get(1));
+                    t3.setText(r.get(2));
+                    t4.setText(r.get(3));
+
+                } else {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+//                        openBottomSheet.setText("Expand sheet");
+
+                }
             }
         });
 
@@ -198,6 +216,44 @@ public class PrescriptionActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void convert2json(String jsonString) {
+        try {
+            JSONObject jsonObject = new JSONObject(jsonString);
+            medicines = jsonObject.getString("Medicines");
+            int count = 0;
+            ArrayList<String> temp = new ArrayList<String>();
+            String med[] = medicines.split("]|,|\\[");
+            for (int i = 0; i < med.length; i++) {
+                if (med[i].equals("")) {
+                    continue;
+                }
+                if (count % 5 == 0) {
+                    Medicines.add(med[i]);
+                } else {
+                    temp.add(med[i]);
+                }
+                count++;
+            }
+            int index = 0;
+            ArrayList<String> sim = new ArrayList<>();
+            for (int i = 0; i < temp.size(); i++) {
+                if (index % 4 == 0 && index != 0) {
+                    sim_med.put(Medicines.get((index / 4) - 1), sim);
+                    sim = new ArrayList<>();
+                }
+                sim.add(temp.get(i));
+                index++;
+
+            }
+            sim_med.put(Medicines.get((index / 4) - 1), sim);
+            Log.e(TAG, "convert2json: " + sim_med);
+
+        } catch (
+                JSONException e) {
+            e.printStackTrace();
+        }
     }
 }
 

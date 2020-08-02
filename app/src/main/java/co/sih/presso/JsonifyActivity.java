@@ -25,33 +25,7 @@ import okhttp3.Response;
 public class JsonifyActivity extends AppCompatActivity {
 
 //    public String test = "c";
-    String test = "{\n" +
-            "    \"Days\": [\n" +
-            "        \" Two days\",\n" +
-            "        \" 3 days\"\n" +
-            "    ],\n" +
-            "    \"Age\": 20,\n" +
-            "    \"Medicines\": [\n" +
-            "        [\n" +
-            "            \"Traxol O 200mg Tablet\",\n" +
-            "            \"Traxol O 100mg Tablet DT\",\n" +
-            "            \"Taxclav 200 Tablet\",\n" +
-            "            \"Tablo 200mg Tablet\",\n" +
-            "            \"Trazonil 100mg Tablet\"\n" +
-            "        ],\n" +
-            "        [\n" +
-            "            \"Cefbact 500mg Injection\",\n" +
-            "            \"Cardiject 50mg Injection\",\n" +
-            "            \"Cefact 750mg Injection\",\n" +
-            "            \"Cimispect 500mg Injection\",\n" +
-            "            \"Clot 5mg Injection\"\n" +
-            "        ]\n" +
-            "    ],\n" +
-            "    \"Dose\": [\n" +
-            "        \" Before Lunch\",\n" +
-            "        \" Before Lunch 3\"\n" +
-            "    ]\n" +
-            "}";
+String test = "{\"Medicines\": [[\"Ridoherp 200mg Tablet\", \"Biohep Tablet\", \"Risdone LS Tablet\", \"Ridone 4mg Tablet\", \"Ridone 3mg Tablet\"], [\"Cardepa Capsule\", \"Carpro Capsule\", \"Cebay Capsule\", \"Carnival Capsule\", \"Depidra Capsule\"], [\"Urotel 4mg Capsule XL\", \"Some 40mg Capsule\", \"Utreva 400mg Capsule\", \"Uterone 400mg Capsule\", \"Oslol 40mg Capsule TR\"], [\"Solzer 250mg/125mg Tablet\", \"Solzer 500mg/125mg Tablet\", \"Solzer 875mg/125mg Tablet\", \"Sonex 500mg/250mg Tablet\", \"Aticef 250 mg/125 mg Tablet\"]], \"Dose\": [\" Before Dinner\", \" Before Dinner\", \" Before Lunch After Dinner 2\", \" After Lunvh Dinner .\"], \"Days\": [\" 17 days\", \" 2 days\", \" 2 days\", \" 10 days\"]}";
     TextView inputStringtv;
     TextView jsonConverttv;
     Button convertToJson, generatePrescriptionbtn;

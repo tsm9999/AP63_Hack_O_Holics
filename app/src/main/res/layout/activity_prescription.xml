@@ -7,17 +7,33 @@
     android:background="#ffffff"
     tools:context=".PrescriptionActivity">
 
-
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="prescription activity" />
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/getBottomSheet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="get Bottom Sheet" />
+
+        <TextView
+            android:fontFamily="@font/bungee"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Prescription "
+            android:textAlignment="center"
+            android:textSize="20dp" />
+
+        <View
+            style="@style/Divider"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp" />
+
+    </LinearLayout>
+
+    <!--    <Button-->
+    <!--        android:id="@+id/getBottomSheet"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="get Bottom Sheet" />-->
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -28,27 +44,39 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="5dp">
 
             <TextView
+                android:drawableLeft="@drawable/drugs"
+                android:fontFamily="@font/bungee"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="prescription activity" />
+                android:padding="5dp"
+                android:text="      Medicines "
+                android:textAlignment="viewStart"
+                android:textSize="15dp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_med"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp" />
 
             <TextView
+                android:drawableLeft="@drawable/symptom"
+                android:fontFamily="@font/bungee"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="prescription activity" />
+                android:padding="5dp"
+                android:text="      Symptoms "
+                android:textSize="15dp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_sym"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp" />
 
         </LinearLayout>
 
