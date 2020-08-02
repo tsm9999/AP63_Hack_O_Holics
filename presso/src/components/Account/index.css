@@ -1,0 +1,27 @@
+#aform{
+    margin: 0;
+    background: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 550px;
+    height: 550px;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+    padding: 70px 30px;
+    border-radius: 2%;
+
+}
+#aform h1{
+    text-align: center;
+}
+#aform button:hover
+{
+    cursor: pointer;
+    background: #429aec;
+    color: #fff;
+}
+#aform p{
+    text-align: center;
+}
