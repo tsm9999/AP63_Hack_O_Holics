@@ -28,14 +28,21 @@ public class PrescriptionActivity extends AppCompatActivity {
     private BottomSheetBehavior sheetBehavior;
     private LinearLayout bottom_sheet;
     HashMap<String, List> sim_med = new HashMap<>();
+    HashMap<String, List> sim_sym = new HashMap<>();
 
 
     String TAG = "PrescriptionActivity";
     String jsonString = null;
     String medicines = null;
+    String symptoms = null;
+    String dose = null;
+    String days = null;
     RecyclerView rv_med, rv_sym;
     ArrayList<String> Medicines = new ArrayList<>();
     ArrayList<String> Symptoms = new ArrayList<>();
+    ArrayList<String> Dose = new ArrayList<>();
+    ArrayList<String> Days = new ArrayList<>();
+
     TextView t1, t2, t3, t4;
 
     @Override
@@ -136,9 +143,26 @@ public class PrescriptionActivity extends AppCompatActivity {
             }
             medList.add(Medicines.get(i));
         }
+        final ArrayList<String> dosList = new ArrayList<>();
+
+        for (int i = 0; i < Dose.size(); i++) {
+            if (Dose.get(i) == null) {
+                break;
+            }
+            dosList.add(Dose.get(i));
+        }
+
+        final ArrayList<String> dayList = new ArrayList<>();
+
+        for (int i = 0; i < Days.size(); i++) {
+            if (Days.get(i) == null) {
+                break;
+            }
+            dayList.add(Days.get(i));
+        }
 
         //creating recyclerview adapter
-        final MedicineAdapter adapter = new MedicineAdapter(this, medList);
+        final MedicineAdapter adapter = new MedicineAdapter(this, medList, dosList, dayList);
 
         //setting adapter to recyclerview
         rv_med.setAdapter(adapter);
@@ -178,11 +202,6 @@ public class PrescriptionActivity extends AppCompatActivity {
 
                 LinearLayoutManager(this));
 
-        Symptoms = new ArrayList<>();
-        Symptoms.add("sym1");
-        Symptoms.add("sym2");
-        Symptoms.add("sym3");
-        Symptoms.add("sym4");
         final ArrayList<String> symList = new ArrayList<>();
         Log.e("length", String.valueOf(Symptoms.size()));
         for (
@@ -209,6 +228,13 @@ public class PrescriptionActivity extends AppCompatActivity {
                 if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
                     sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 //                        openBottomSheet.setText("Close sheet");
+
+                    ArrayList<String> r = new ArrayList<>(sim_sym.get(temp));
+                    t1.setText(r.get(0));
+                    t2.setText(r.get(1));
+                    t3.setText(r.get(2));
+                    t4.setText(r.get(3));
+
                 } else {
                     sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 //                        openBottomSheet.setText("Expand sheet");
@@ -249,7 +275,58 @@ public class PrescriptionActivity extends AppCompatActivity {
             }
             sim_med.put(Medicines.get((index / 4) - 1), sim);
             Log.e(TAG, "convert2json: " + sim_med);
+//          ----------------------------------------------------------------
 
+
+            symptoms = jsonObject.getString("Symptoms");
+            count = 0;
+            temp = new ArrayList<String>();
+            String sym[] = symptoms.split("]|,|\\[");
+            for (int i = 0; i < sym.length; i++) {
+                if (sym[i].equals("")) {
+                    continue;
+                }
+                if (count % 5 == 0) {
+                    Symptoms.add(sym[i]);
+                } else {
+                    temp.add(sym[i]);
+                }
+                count++;
+            }
+            index = 0;
+            sim = new ArrayList<>();
+            for (int i = 0; i < temp.size(); i++) {
+                if (index % 4 == 0 && index != 0) {
+                    sim_sym.put(Symptoms.get((index / 4) - 1), sim);
+                    sim = new ArrayList<>();
+                }
+                sim.add(temp.get(i));
+                index++;
+
+            }
+            sim_sym.put(Symptoms.get((index / 4) - 1), sim);
+            Log.e(TAG, "convert2json: " + sim_sym);
+
+//            ----------------------------------------------------
+
+            dose = jsonObject.getString("Dose");
+            String dos[] = dose.split("]|,|\\[");
+            for (int i = 0; i < dos.length; i++) {
+                if (dos[i].equals("")) {
+                    continue;
+                }
+                Dose.add(dos[i]);
+            }
+
+//            ---------------------------
+            days = jsonObject.getString("Days");
+            String day[] = days.split("]|,|\\[");
+            for (int i = 0; i < day.length; i++) {
+                if (day[i].equals("")) {
+                    continue;
+                }
+                Days.add(day[i]);
+            }
         } catch (
                 JSONException e) {
             e.printStackTrace();

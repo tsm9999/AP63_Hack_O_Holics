@@ -2,19 +2,15 @@ package co.sih.presso;
 
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
-import java.util.List;
-
 import androidx.recyclerview.widget.RecyclerView;
 
-
+import java.util.List;
 
 
 public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.ProductViewHolder> {
@@ -25,20 +21,25 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.Produc
 
     //we are storing all the products in a list
     private List<String> medList;
+    private List<String> dosList;
+    private List<String> dayList;
+
     private onItemClickListener mListener;
 
-    public interface onItemClickListener{
+    public interface onItemClickListener {
         void onItemClick(int position);
     }
 
-    public void setOnItemClickListener(onItemClickListener listener)
-    {
-        mListener=listener;
+    public void setOnItemClickListener(onItemClickListener listener) {
+        mListener = listener;
     }
+
     //getting the context and product list with constructor
-    public MedicineAdapter(Context mCtx, List<String> medList) {
+    public MedicineAdapter(Context mCtx, List<String> medList, List<String> dosList, List<String> dayList) {
         this.mCtx = mCtx;
         this.medList = medList;
+        this.dosList = dosList;
+        this.dayList = dayList;
     }
 
     @Override
@@ -56,6 +57,7 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.Produc
 
         //binding the data with the viewholder views
         holder.textViewTitle.setText(medList.get(position));
+        holder.textViewDose.setText(dosList.get(position) + " || " + dayList.get(position));
 
 
     }
@@ -69,13 +71,14 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.Produc
 
     class ProductViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textViewTitle, textViewShortDesc;
+        TextView textViewTitle, textViewDose;
         ImageView imageView;
 
         public ProductViewHolder(View itemView, final onItemClickListener listener) {
             super(itemView);
 
             textViewTitle = itemView.findViewById(R.id.textViewTitle);
+            textViewDose = itemView.findViewById(R.id.dosageText);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
