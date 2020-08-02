@@ -24,8 +24,8 @@ import okhttp3.Response;
 
 public class JsonifyActivity extends AppCompatActivity {
 
-    public String test = "c";
-    String test1 = "{\n" +
+//    public String test = "c";
+    String test = "{\n" +
             "    \"Days\": [\n" +
             "        \" Two days\",\n" +
             "        \" 3 days\"\n" +
@@ -78,11 +78,20 @@ public class JsonifyActivity extends AppCompatActivity {
         convertToJson.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                postRequest("hello tanush", url);
+                postRequest("msg", url);
                 jsonConverttv.setText(test);
+
+                Intent intent = new Intent(getApplicationContext(), PrescriptionActivity.class);
+                // Toast.makeText(this, test, Toast.LENGTH_SHORT).show();
+                intent.putExtra("jsonString", test);
+                startActivity(intent);
 
             }
         });
+
+
+
+
 //        jsonConverttv.setText(test);
 
         generatePrescriptionbtn.setOnClickListener(new View.OnClickListener() {
