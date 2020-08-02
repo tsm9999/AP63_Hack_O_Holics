@@ -6,19 +6,20 @@ import firebase from 'firebase';
 import './index.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import * as ROUTES from '../../constants/routes';
-import ReactSearchBox from 'react-search-box'
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 
+var prop1;
+
 class scheduling extends React.Component {
   constructor(props) {
-    super(props);
+    super(props);  
     this.state = {
       loading: false,
       users: [],
+      po: this.props,
       db: firebase.firestore(),
-
       columnDefs: [{
         headerName: "Patient ID", field: "id", sortable: true, filter: true
         },{
@@ -34,7 +35,57 @@ class scheduling extends React.Component {
       
     };
     firebase.firestore().settings({ timestampsInSnapshots: true});
+    prop1 = this.props;
+  }
 
+   onSelectionChanged() {
+    var selectedRows = this.api.getSelectedRows();
+       //get doc
+     prop1.firebase.db.collection("Patient_Details")
+      .doc(selectedRows[0].id)
+      .get()
+      .then(doc => {
+        const data = doc.data();
+        console.log('row', doc.data());
+
+        const t_his = [];
+         prop1.firebase.db.collection("Patient_Details")
+          .doc(selectedRows[0].id)
+          .collection("History")          
+          .get()
+          .then((querySnapshot) => {             
+             querySnapshot.forEach((doc) => {
+              t_his.push({ key: doc.id, ...doc.data() })
+             })
+             console.log('sc his',t_his);  
+             
+             prop1.history.push({
+              pathname: ROUTES.SPEECH,
+              state : {
+                name: doc.data().name,
+                key: selectedRows[0].id,
+                gender: doc.data().gender,
+                age: doc.data().age,
+                contact: doc.data().email,
+                history: t_his
+              }
+            });
+
+          });           
+        
+      
+      }).catch(function(error) {
+      console.log("Got an error: ",error);
+      });
+
+
+    // prop1.history.push({
+    //   pathname: ROUTES.SPEECH,
+    //   state : {
+    //     name: selectedRows[0].PatientName,
+    //     key: selectedRows[0].id
+    //   }
+    // });
   }
 
    async getData() {
@@ -72,7 +123,7 @@ class scheduling extends React.Component {
   
   componentWillUnmount() {
    // firebase.firestore().collection('patients');
-  }  
+  }    
   
   render() {
     const { users, loading } = this.state;
@@ -94,6 +145,8 @@ class scheduling extends React.Component {
         <AgGridReact
             columnDefs={this.state.columnDefs}
             rowData={this.state.users}
+            rowSelection= {'single'}
+            onSelectionChanged={ this.onSelectionChanged}
             onGridReady={ params => console.log("API", params.api) }  
             >
         </AgGridReact>
