@@ -3,6 +3,7 @@ package co.sih.presso;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,6 +31,7 @@ public class PrescriptionActivity extends AppCompatActivity {
     private LinearLayout bottom_sheet;
     HashMap<String, List> sim_med = new HashMap<>();
     HashMap<String, List> sim_sym = new HashMap<>();
+    FloatingActionButton addPrescriptionbtn;
 
 
     String TAG = "PrescriptionActivity";
@@ -37,11 +40,20 @@ public class PrescriptionActivity extends AppCompatActivity {
     String symptoms = null;
     String dose = null;
     String days = null;
+    String temp = null;
     RecyclerView rv_med, rv_sym;
     ArrayList<String> Medicines = new ArrayList<>();
     ArrayList<String> Symptoms = new ArrayList<>();
     ArrayList<String> Dose = new ArrayList<>();
     ArrayList<String> Days = new ArrayList<>();
+    ArrayList<String> medList = new ArrayList<>();
+    ArrayList<String> symList = new ArrayList<>();
+    ArrayList<String> dosList = new ArrayList<>();
+    ArrayList<String> dayList = new ArrayList<>();
+
+
+    MedicineAdapter adapter;
+    SymptomAdapter adapter2;
 
     TextView t1, t2, t3, t4;
 
@@ -58,50 +70,8 @@ public class PrescriptionActivity extends AppCompatActivity {
         t4 = findViewById(R.id.recommendation_4);
         sheetBehavior.setPeekHeight(0);
 
+        addPrescriptionbtn = findViewById(R.id.prescriptionAddbtn);
 
-//            openBottomSheet.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
-//                        sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-//                        openBottomSheet.setText("Close sheet");
-//                    } else {
-//                        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-//                        openBottomSheet.setText("Expand sheet");
-//
-//                    }
-//                }
-//            });
-//
-//        // callback for do something
-//        sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-//            @Override
-//            public void onStateChanged(@NonNull View view, int newState) {
-//                switch (newState) {
-//                    case BottomSheetBehavior.STATE_HIDDEN:
-//                        break;
-//                    case BottomSheetBehavior.STATE_EXPANDED: {
-//                        openBottomSheet.setText("Close Sheet");
-//                    }
-//                    break;
-//                    case BottomSheetBehavior.STATE_COLLAPSED: {
-//                        openBottomSheet.setText("Expand Sheet");
-//                        sheetBehavior.setPeekHeight(0);
-//
-//                    }
-//                    break;
-//                    case BottomSheetBehavior.STATE_DRAGGING:
-//                        break;
-//                    case BottomSheetBehavior.STATE_SETTLING:
-//                        break;
-//                }
-//            }
-//
-//            @Override
-//            public void onSlide(@NonNull View view, float v) {
-//
-//            }
-//        });
 
 
         Intent in = getIntent();
@@ -134,7 +104,7 @@ public class PrescriptionActivity extends AppCompatActivity {
                 LinearLayoutManager(this));
 
 
-        final ArrayList<String> medList = new ArrayList<>();
+        medList = new ArrayList<>();
         Log.e("length", String.valueOf(Medicines.size()));
         for (
                 int i = 0; i < Medicines.size(); i++) {
@@ -162,14 +132,14 @@ public class PrescriptionActivity extends AppCompatActivity {
         }
 
         //creating recyclerview adapter
-        final MedicineAdapter adapter = new MedicineAdapter(this, medList, dosList, dayList);
+        adapter = new MedicineAdapter(this, medList, dosList, dayList);
 
         //setting adapter to recyclerview
         rv_med.setAdapter(adapter);
         adapter.setOnItemClickListener(new MedicineAdapter.onItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                String temp = medList.get(position);
+                temp = medList.get(position);
                 //clicked(temp);
                 Toast.makeText(getApplicationContext(), temp, Toast.LENGTH_SHORT).show();
                 adapter.notifyItemChanged(position);
@@ -202,7 +172,7 @@ public class PrescriptionActivity extends AppCompatActivity {
 
                 LinearLayoutManager(this));
 
-        final ArrayList<String> symList = new ArrayList<>();
+        symList = new ArrayList<>();
         Log.e("length", String.valueOf(Symptoms.size()));
         for (
                 int i = 0; i < Symptoms.size(); i++) {
@@ -213,14 +183,14 @@ public class PrescriptionActivity extends AppCompatActivity {
         }
 
         //creating recyclerview adapter
-        final SymptomAdapter adapter2 = new SymptomAdapter(this, symList);
+        adapter2 = new SymptomAdapter(this, symList);
 
         //setting adapter to recyclerview
         rv_sym.setAdapter(adapter2);
         adapter2.setOnItemClickListener(new SymptomAdapter.onItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                String temp = symList.get(position);
+                temp = symList.get(position);
                 //clicked(temp);
                 Toast.makeText(getApplicationContext(), temp, Toast.LENGTH_SHORT).show();
                 adapter2.notifyItemChanged(position);
@@ -242,11 +212,49 @@ public class PrescriptionActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+        t1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                flipBottomSheet(temp, t1.getText().toString());
+
+            }
+        });
+
+        t2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                flipBottomSheet(temp, t2.getText().toString());
+            }
+        });
+
+        t3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                flipBottomSheet(temp, t3.getText().toString());
+            }
+        });
+
+        t4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                flipBottomSheet(temp, t4.getText().toString());
+            }
+        });
+
+        addPrescriptionbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AddInPrescription(jsonString);
+            }
+        });
     }
 
     public void convert2json(String jsonString) {
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
+            Log.e("tag", jsonObject.toString());
             medicines = jsonObject.getString("Medicines");
             int count = 0;
             ArrayList<String> temp = new ArrayList<String>();
@@ -332,6 +340,63 @@ public class PrescriptionActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+
+    public void flipBottomSheet(String s1, String s2) {
+        ArrayList<String> arr1 = new ArrayList<>();
+        if (sim_med.containsKey(s1)) {
+            arr1 = (ArrayList<String>) sim_med.get(s1);
+            arr1.remove(s2);
+            arr1.add(s1);
+            sim_med.remove(s1);
+            sim_med.put(s2, arr1);
+            Log.e("flip", sim_med.toString());
+
+            int i = medList.indexOf(s1);
+            medList.remove(s1);
+
+            medList.add(i, s2);
+            funChangeMed(i);
+
+        }
+        ArrayList<String> arr2 = new ArrayList<>();
+
+        if (sim_sym.containsKey(s1)) {
+
+            arr2 = (ArrayList<String>) sim_sym.get(s1);
+            arr2.remove(s2);
+            arr2.add(s1);
+            sim_sym.remove(s1);
+            sim_sym.put(s2, arr2);
+            Log.e("list", symList.toString());
+            Log.e("flip", sim_sym.toString());
+            int i = symList.indexOf(s1);
+
+            symList.remove(s1);
+
+            symList.add(i, s2);
+            funChangeSym(i);
+
+        }
+    }
+
+    public void funChangeMed(int position) {
+        medList.get(position);
+        adapter.notifyItemChanged(position);
+        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+    }
+
+    public void funChangeSym(int position) {
+        symList.get(position);
+        adapter2.notifyItemChanged(position);
+        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+    }
+
+    public void AddInPrescription(String jsonString) {
+        Intent intent = new Intent();
+        intent.putExtra("type", "add");
+    }
+
 }
 
 

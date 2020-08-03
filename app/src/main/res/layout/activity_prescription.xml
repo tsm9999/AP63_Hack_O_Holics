@@ -78,6 +78,16 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp" />
 
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/prescriptionAddbtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_margin="10dp"
+                android:layout_marginRight="0dp"
+                android:foregroundGravity="right"
+                android:src="@drawable/ic_baseline_mic_24" />
+
         </LinearLayout>
 
     </ScrollView>
