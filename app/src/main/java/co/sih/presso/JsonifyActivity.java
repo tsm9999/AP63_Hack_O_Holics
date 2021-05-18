@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,8 +32,10 @@ public class JsonifyActivity extends AppCompatActivity {
     String inputSTString;
     TextView inputStringtv;
     TextView jsonConverttv;
+    EditText localNetwork;
     Button convertToJson, generatePrescriptionbtn;
-    private String url = "http://" + "192.168.1.209:5005/";
+//    private String url = "http://" + "192.168.1.8:5005/";
+    private String url;
     private String postBodyString;
     private MediaType mediaType;
     private RequestBody requestBody;
@@ -46,7 +49,9 @@ public class JsonifyActivity extends AppCompatActivity {
         inputStringtv = findViewById(R.id.inputStringtv);
         jsonConverttv = findViewById(R.id.outputJsontv);
         generatePrescriptionbtn = findViewById(R.id.btngeneratePrescription);
+        localNetwork = findViewById(R.id.LocalNetwork);
 
+        url = "http://" + localNetwork.getText().toString() + ":5005/";
 
         Intent in = getIntent();
         inputSTString = in.getStringExtra("inputSTTString");
@@ -55,7 +60,17 @@ public class JsonifyActivity extends AppCompatActivity {
         convertToJson.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                postRequest(inputSTString, url);
+                url = "http://" + localNetwork.getText().toString() + ":5005/";
+
+                if(localNetwork.getText().toString().equals("")) {
+                    Toast.makeText(JsonifyActivity.this, "Enter local network address to connect!", Toast.LENGTH_SHORT).show();
+
+                }
+                else {
+                    Toast.makeText(JsonifyActivity.this, url, Toast.LENGTH_SHORT).show();
+                    postRequest(inputSTString, url);
+                }
+
 
             }
         });

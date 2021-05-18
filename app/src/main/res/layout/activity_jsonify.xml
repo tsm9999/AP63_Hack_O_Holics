@@ -32,6 +32,19 @@
         android:textAlignment="center"
         android:textSize="18dp" />
 
+    <View
+        style="@style/Divider"
+        android:layout_gravity="center"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp" />
+
+    <EditText
+        android:id="@+id/LocalNetwork"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:hint="Enter Local Network (IPv4)"/>
+
     <Button
         android:id="@+id/btnConvertToJson"
         android:layout_width="wrap_content"
