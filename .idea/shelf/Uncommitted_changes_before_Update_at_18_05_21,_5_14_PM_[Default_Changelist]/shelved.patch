@@ -1,0 +1,99 @@
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"CMakeSettings\">\n    <configurations>\n      <configuration PROFILE_NAME=\"Debug\" CONFIG_NAME=\"Debug\" />\n    </configurations>\n  </component>\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_1_7\" project-jdk-name=\"1.8\" project-jdk-type=\"JavaSDK\">\n    <output url=\"file://$PROJECT_DIR$/build/classes\" />\n  </component>\n  <component name=\"ProjectType\">\n    <option name=\"id\" value=\"Android\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/misc.xml	(revision a228a2fe3596e69ee602d938f8cedfe6066b4cce)
++++ .idea/misc.xml	(date 1621273782777)
+@@ -5,7 +5,7 @@
+       <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+     </configurations>
+   </component>
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" project-jdk-name="1.8" project-jdk-type="JavaSDK">
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="false" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+     <output url="file://$PROJECT_DIR$/build/classes" />
+   </component>
+   <component name="ProjectType">
+Index: Flask_nltk.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from flask import Flask, request, jsonify\n\napp = Flask(__name__)\n\n# people = [{'name': 'Alice', 'birth-year': 1986},\n#           {'name': 'Bob', 'birth-year': 1985}]\n@app.route('/',methods=['GET', 'POST'])\ndef handle_request():\n\tif request.method == 'POST':\n\t\ttext1 = request.get_data()\n\t\ttext = text1.decode(\"utf-8\")\n\t\tprint(text)\n\n\timport os\n\timport pandas as pd\n\timport numpy as np\n\tfrom difflib import get_close_matches\n\n\tdf = pd.read_excel(\"/home/ritika/SIH2020/SIH Data/medicines.xlsx\",sheet_name=\"Sheet1\",header=None)\n\tdf.head()\n\n\tdf1 = pd.read_excel(\"/home/ritika/SIH2020/SIH Data/sym1.xlsx\",sheet_name=\"Sheet1\",header=None)\n\tdf1.head()\n\tsym_list = df1[0].astype('str')\n\tsym_list = sym_list.values.tolist()\n\n\n\tmedicine_list = df[0].astype('str')\n\n\tmedicine_list = medicine_list.values.tolist()\n\n\t# test_case = \"teli card 40mg tablet\"\n\t# test_case = \"soldier 250mg/125mg tablet\"\n\t#test_case = \"card per capsule\"\n\ttest_case = \"kardepa capsule\"\n\t# test_case = \"a ride on her 200 mg tablet\"\n\t# test_case = \"clinical 10mg tablet\"\n\t# test_case = \"silne kem 5mg tablet\"\n\n\tget_close_matches(test_case,medicine_list,n=5,cutoff=0.5)\n\t\n\t\n\t\n\t\n\timport nltk\n\t    # nltk.internals.config_java(r'C:\\Program Files\\Java\\jdk-12\\bin\\java.exe')\n\tfrom nltk.tag import StanfordNERTagger\n\tfrom nltk.corpus import stopwords\n\tfrom nltk.tokenize import word_tokenize \n\tstop_words = set(stopwords.words('english'))\n\t\n\timport json\n\t\n\timport sys \n\timport os\n\t# nltk.internals.config_java(\"C:/Program Files/Java/jdk-12/bin/java.exe\")\n\tfrom nltk.tag import StanfordNERTagger\n\tfrom nltk.corpus import stopwords\n\tfrom nltk.tokenize import word_tokenize\n\tstop_words = set(stopwords.words('english'))\n\t\n\tstop_words.add(\"for\")\n\tstop_words.remove(\"before\")\n\tstop_words.remove(\"after\")\n\tstop_words.remove(\"during\")\n\tprint(stop_words)\n\t\n\t#text='''Take Ridoherp EX Tablet for 17 days take Cardepa Capsule before dinner take Urotel 4 mg Capsule before lunch and after dinner for 2 days.'''\n\t#text='''take traxol O 200 mg tablet for two days before lunch take the correct 500mg injection before lunch for 3 days take'''\n\t\n\tlst = nltk.word_tokenize(text)\n\ttokens = [x.capitalize() for x in lst]\n\tentity_tagger=StanfordNERTagger('/home/ritika/SIH2020/stanford-ner-tagger/v7_ner_model.ser.gz', '/home/ritika/SIH2020/stanford-ner-tagger/stanford-ner-3.9.2.jar')\n\t#print(tokens)\n\tfiltered_sentence=[]\n\tfor w in tokens:\n\t    if w.lower() not in stop_words: \n\t        filtered_sentence.append(w) \n\t\n\t#print(filtered_sentence)\n\ttagged_entity = entity_tagger.tag(filtered_sentence)\n\tprint(tagged_entity)\n\tsearch_med=\"\"\n\t\n\trngtuple=[None] * 10\n\ttimtuple=[None] * 10\n\tmedtuple=[None] * 10\n\tsym=[]\n\tindex=-1\n\t\n\ti=0\n\twhile i<len(tagged_entity):\n\t  pair=tagged_entity[i]\n\t  #print(pair)\n\t  #medicines\n\t  \n\t  #sym\n\t  if pair[1] == 'SYM':\n\t    print(pair)\n\t    i=i+1\n\t    if i >len(tagged_entity):\n\t      break\n\t    pair=tagged_entity[i]\n\t    sym_search=''\n\t    while pair[1]!='TIM' and pair[1]!='DAY' and pair[1]!= \"T\" and pair[1]!='SYM':\n\t      sym_search+=' '+pair[0]\n\t      i=i+1\n\t      if i >len(tagged_entity)-1:\n\t        break\n\t      pair=tagged_entity[i]\n\t    sym.append(get_close_matches(sym_search,sym_list,n=5,cutoff=0.4))\n\t    print(sym)\n\t    if pair[1]=='SYM':\n\t      continue\n\t      \n\t      \n\t  if pair[1]=='T':\n\t    i=i+1\n\t    if i >len(tagged_entity)-1:\n\t      break\n\t    pair=tagged_entity[i]\n\t    search_med=\"\"\n\t    while pair[1]!='TIM' and pair[1]!='DAY' and pair[1]!= \"T\":\n\t      if pair[1]=='TYP':\n\t        index=index+1\n\t        search_med+=pair[0]+' '\n\t        print(search_med)\n\t        medtuple[index]= get_close_matches(search_med,medicine_list,n=5,cutoff=0.4)\n\t        i=i+1\n\t        if i >len(tagged_entity)-1:\n\t          break\n\t        pair=tagged_entity[i]\n\t        search_med=''\n\t      \n\t      search_med+=pair[0]+' '\n\t      i=i+1\n\t      if i >len(tagged_entity)-1:\n\t        break\n\t      pair=tagged_entity[i]\n\t      #print('--',pair)\n\t    if pair[1]=='TIM':\n\t      i=i-1\n\t    continue\n\t\n\t  #Time\n\t  if pair[1] == 'TIM':\n\t\t\t#timtuple[index]=' '+pair[0]\n\t    tim=' '+pair[0]\n\t    i=i+1\n\t    if i >len(tagged_entity)-1:\n\t      break\n\t    pair=tagged_entity[i]\n\t    while pair[1]!= 'T' and pair[1]!= 'DAY':\n\t\t\t\t#timtuple[index]+=' ' +pair[0]\n\t      tim+=' '+pair[0]\n\t      i=i+1\n\t      if i >len(tagged_entity)-1:\n\t        break\n\t      pair=tagged_entity[i]\n\t    #i=i-1\n\t    print(tim)\n\t    timtuple[index]=tim\n\t\t\t#prescription.append(('TIM',timtuple))\n\t    continue\n\t  \n\t  #day\n\t  if pair[1] == 'DAY' :\n\t\t\t#print(pair)\n\t\t\t#rngtuple=' '\n\t    i=i-1\n\t    if i >len(tagged_entity)-1:\n\t      break\n\t    pair=tagged_entity[i]\n\t\t\t#rngtuple[index]=' ' +pair[0]+' days'\n\t    rng=' '+pair[0]+' days'\n\t    print(rng)\n\t    rngtuple[index]=rng\n\t  i=i+1\n\t\t\t#prescription.append(('RNG',rngtuple))\n\t    \n\t  i=i+1\n\t\n\tprint(medtuple)  \n\tprint(timtuple)\n\tprint(rngtuple)\n\t\n\timport json\n\tMedicines=[]\n\tDose=[]\n\tDays=[]\n\tSymptoms=[\"Cough\",\"Weaknes\",\"Allergy\",\"Soar Throat\",\"cold\"]\n\tSymptoms=sym\n\tprint()\n\tfor i in range(0,index+1):\n\t  if timtuple[i]==None:\n\t    if timtuple[i+1]!=None:\n\t      timtuple[i]=timtuple[i+1]\n\t    else:\n\t      timtuple[i]=timtuple[i-1]\n\t  elif rngtuple[i]==None:\n\t    if rngtuple[i+1]!=None:\n\t      rngtuple[i]=rngtuple[i+1]\n\t    else:\n\t      rngtuple[i]=rngtuple[i-1]\n\t  Medicines.append(medtuple[i])\n\t  Dose.append(timtuple[i])\n\t  Days.append(rngtuple[i])\n\t\n\tdata_json = {}\n\tdata_json[\"Medicines\"] = Medicines\n\tdata_json[\"Dose\"] = Dose\n\tdata_json[\"Days\"] = Days\n\tdata_json[\"Symptoms\"] = Symptoms\n\t\n\tprint(json.dumps(data_json))\n\t# with open(\"json_data.json\", \"w\") as write_file:\n\t#     json.dump(data_json, write_file, indent = 4)\n\t\n\t\n\t\n\t\n\treturn jsonify(data_json)\n\napp.run(host=\"0.0.0.0\", port=5005)\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- Flask_nltk.py	(revision a228a2fe3596e69ee602d938f8cedfe6066b4cce)
++++ Flask_nltk.py	(date 1621338130165)
+@@ -16,15 +16,15 @@
+ 	import numpy as np
+ 	from difflib import get_close_matches
+ 
+-	df = pd.read_excel("/home/ritika/SIH2020/SIH Data/medicines.xlsx",sheet_name="Sheet1",header=None)
++	df = pd.read_excel("/home/maddi/AndroidStudioProjects/Presso_v1/medicines.xlsx",sheet_name="Sheet1",header=None)
+ 	df.head()
+ 
+-	df1 = pd.read_excel("/home/ritika/SIH2020/SIH Data/sym1.xlsx",sheet_name="Sheet1",header=None)
++	df1 = pd.read_excel("/home/maddi/AndroidStudioProjects/Presso_v1/sym1.xlsx",sheet_name="Sheet1",header=None)
+ 	df1.head()
+ 	sym_list = df1[0].astype('str')
+ 	sym_list = sym_list.values.tolist()
+ 
+-
++	
+ 	medicine_list = df[0].astype('str')
+ 
+ 	medicine_list = medicine_list.values.tolist()
+@@ -65,12 +65,12 @@
+ 	stop_words.remove("during")
+ 	print(stop_words)
+ 	
+-	#text='''Take Ridoherp EX Tablet for 17 days take Cardepa Capsule before dinner take Urotel 4 mg Capsule before lunch and after dinner for 2 days.'''
++	text='''Take Ridoherp EX Tablet for 17 days take Cardepa Capsule before dinner take Urotel 4 mg Capsule before lunch and after dinner for 2 days.'''
+ 	#text='''take traxol O 200 mg tablet for two days before lunch take the correct 500mg injection before lunch for 3 days take'''
+ 	
+ 	lst = nltk.word_tokenize(text)
+ 	tokens = [x.capitalize() for x in lst]
+-	entity_tagger=StanfordNERTagger('/home/ritika/SIH2020/stanford-ner-tagger/v7_ner_model.ser.gz', '/home/ritika/SIH2020/stanford-ner-tagger/stanford-ner-3.9.2.jar')
++	entity_tagger=StanfordNERTagger('/home/maddi/AndroidStudioProjects/Presso_v1/v7_ner_model.ser.gz', '/home/maddi/AndroidStudioProjects/Presso_v1/stanford-ner-3.9.2.jar')
+ 	#print(tokens)
+ 	filtered_sentence=[]
+ 	for w in tokens:
+@@ -221,4 +221,4 @@
+ 	
+ 	return jsonify(data_json)
+ 
+-app.run(host="0.0.0.0", port=5005)
++app.run(host="0.0.0.0", port=5000)
+Index: .idea/compiler.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/compiler.xml	(date 1621273782929)
++++ .idea/compiler.xml	(date 1621273782929)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="CompilerConfiguration">
++    <bytecodeTargetLevel target="11" />
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/runConfigurations.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"RunConfigurationProducerService\">\n    <option name=\"ignoredProducers\">\n      <set>\n        <option value=\"org.jetbrains.plugins.gradle.execution.test.runner.AllInPackageGradleConfigurationProducer\" />\n        <option value=\"org.jetbrains.plugins.gradle.execution.test.runner.TestClassGradleConfigurationProducer\" />\n        <option value=\"org.jetbrains.plugins.gradle.execution.test.runner.TestMethodGradleConfigurationProducer\" />\n      </set>\n    </option>\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/runConfigurations.xml	(revision a228a2fe3596e69ee602d938f8cedfe6066b4cce)
++++ .idea/runConfigurations.xml	(date 1621273497975)
+@@ -3,6 +3,7 @@
+   <component name="RunConfigurationProducerService">
+     <option name="ignoredProducers">
+       <set>
++        <option value="com.android.tools.idea.compose.preview.runconfiguration.ComposePreviewRunConfigurationProducer" />
+         <option value="org.jetbrains.plugins.gradle.execution.test.runner.AllInPackageGradleConfigurationProducer" />
+         <option value="org.jetbrains.plugins.gradle.execution.test.runner.TestClassGradleConfigurationProducer" />
+         <option value="org.jetbrains.plugins.gradle.execution.test.runner.TestMethodGradleConfigurationProducer" />
